@@ -1,0 +1,236 @@
+openapi: 3.0.0
+info:
+  title: Netflix API
+  description: API para acceder a la información sobre películas y programas de TV de Netflix.
+  version: 1.0.0
+servers:
+  - url: "http://localhost:3000"
+paths:
+  /api/movies:
+    get:
+      summary: Obtiene una lista de todas las películas disponibles en Netflix.
+      responses:
+        "200":
+          description: Lista de películas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Movie"
+  /api/shows:
+    get:
+      summary: Obtiene una lista de todos los programas de TV disponibles en Netflix.
+      responses:
+        "200":
+          description: Lista de programas de TV.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TVShow"
+  /api/movies/{show_id}:
+    get:
+      summary: Obtiene los detalles de una película específica.
+      parameters:
+        - in: path
+          name: show_id
+          description: Identificador único de la película.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detalles de la película.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+        "404":
+          description: Película no encontrada.
+  /api/shows/{show_id}:
+    get:
+      summary: Obtiene los detalles de un programa de TV específico.
+      parameters:
+        - in: path
+          name: show_id
+          description: Identificador único del programa de TV.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detalles del programa de TV.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TVShow"
+        "404":
+          description: Programa de TV no encontrado.
+  /api/movies/genres/{genre}:
+    get:
+      summary: Obtiene una lista de películas por género.
+      parameters:
+        - in: path
+          name: genre
+          description: Género de las películas.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de películas por género.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Movie"
+        "404":
+          description: No se encontraron películas para el género especificado.
+  /api/shows/genres/{genre}:
+    get:
+      summary: Obtiene una lista de programas de TV por género.
+      parameters:
+        - in: path
+          name: genre
+          description: Género de los programas de TV.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de programas de TV por género.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TVShow"
+        "404":
+          description: No se encontraron programas de TV para el género especificado.
+  /api/movies/year/{year}:
+    get:
+      summary: Obtiene una lista de películas por año de lanzamiento.
+      parameters:
+        - in: path
+          name: year
+          description: Año de lanzamiento de las películas.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Lista de películas por año de lanzamiento.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Movie"
+        "404":
+          description: No se encontraron películas para el año especificado.
+  /api/shows/year/{year}:
+    get:
+      summary: Obtiene una lista de programas de TV por año de lanzamiento.
+      parameters:
+        - in: path
+          name: year
+          description: Año de lanzamiento de los programas de TV.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Lista de programas de TV por año de lanzamiento.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TVShow"
+        "404":
+          description: No se encontraron programas de TV para el año especificado.
+components:
+  schemas:
+    Movie:
+      type: object
+      properties:
+        show_id:
+          type: string
+          description: Identificador único de la película.
+        type:
+          type: string
+          description: Categoría de la película (Movie).
+        title:
+          type: string
+          description: Nombre de la película.
+        director:
+          type: string
+          description: Director(es) de la película.
+        cast:
+          type: string
+          description: Lista de actores/actrices principales de la película.
+        country:
+          type: string
+          description: País(es) de producción de la película.
+        date_added:
+          type: string
+          description: Fecha en la que se añadió la película a Netflix.
+        release_year:
+          type: integer
+          description: Año de lanzamiento de la película.
+        rating:
+          type: string
+          description: Clasificación por edades de la película.
+        duration:
+          type: integer
+          description: Duración de la película en minutos.
+        listed_in:
+          type: string
+          description: Géneros de la película.
+        description:
+          type: string
+          description: Resumen de la película.
+    TVShow:
+      type: object
+      properties:
+        show_id:
+          type: string
+          description: Identificador único del programa de TV.
+        type:
+          type: string
+          description: Categoría del programa de TV (TV Show).
+        title:
+          type: string
+          description: Nombre del programa de TV.
+        director:
+          type: string
+          description: Director(es) del programa de TV.
+        cast:
+          type: string
+          description: Lista de actores/actrices principales del programa de TV.
+        country:
+          type: string
+          description: País(es) de producción del programa de TV.
+        date_added:
+          type: string
+          description: Fecha en la que se añadió el programa de TV a Netflix.
+        release_year:
+          type: integer
+          description: Año de lanzamiento del programa de TV.
+        rating:
+          type: string
+          description: Clasificación por edades del programa de TV.
+        duration:
+          type: integer
+          description: Número de temporadas del programa de TV.
+        listed_in:
+          type: string
+          description: Géneros del programa de TV.
+        description:
+          type: string
+          description: Resumen del programa de TV.
