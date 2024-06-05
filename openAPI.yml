@@ -18,6 +18,54 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Movie"
+    post:
+      summary: Añade una nueva película
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+      responses:
+        '201':
+          description: Película añadida correctamente
+        '400':
+          description: Datos inválidos
+    put:
+      summary: Actualiza una película existente
+      parameters:
+        - in: path
+          name: show_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+      responses:
+        '200':
+          description: Película actualizada correctamente
+        '404':
+          description: Película no encontrada
+        '400':
+          description: Error en la solicitud
+    delete:
+      summary: Elimina una película
+      parameters:
+        - in: path
+          name: show_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Película eliminada correctamente
+        '404':
+          description: Película no encontrada
+
   /api/shows:
     get:
       summary: Obtiene una lista de todos los programas de TV disponibles en Netflix.
@@ -154,6 +202,62 @@ paths:
                   $ref: "#/components/schemas/TVShow"
         "404":
           description: No se encontraron programas de TV para el año especificado.
+          
+          
+  /api/shows:
+    post:
+      summary: Añade un nuevo programa de TV
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TVShow'
+      responses:
+        '201':
+          description: Programa de TV añadido correctamente
+        '400':
+          description: Datos inválidos
+    put:
+      summary: Actualiza un programa de TV
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TVShow'
+      responses:
+        '200':
+          description: Programa de TV actualizado correctamente
+        '404':
+          description: Programa de TV no encontrado
+    delete:
+      summary: Elimina un programa de TV
+      parameters:
+        - in: query
+          name: show_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Programa de TV eliminado correctamente
+        '404':
+          description: Programa de TV no encontrado
+  /api/reviews:
+    post:
+      summary: Añade una nueva reseña a una película o programa de TV
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+      responses:
+        '201':
+          description: Reseña añadida correctamente
+        '400':
+          description: Datos inválidos
 components:
   schemas:
     Movie:
@@ -234,3 +338,41 @@ components:
         description:
           type: string
           description: Resumen del programa de TV.
+    User:
+      type: object
+      required:
+        - username
+        - email
+      properties:
+        user_id:
+          type: string
+          description: Identificador único del usuario
+        username:
+          type: string
+          description: Nombre de usuario
+        email:
+          type: string
+          description: Correo electrónico del usuario
+    Review:
+      type: object
+      required:
+        - user_id
+        - show_id
+        - rating
+        - text
+      properties:
+        review_id:
+          type: string
+          description: Identificador único de la reseña
+        user_id:
+          type: string
+          description: Identificador del usuario que escribe la reseña
+        show_id:
+          type: string
+          description: Identificador de la película o programa de TV reseñado
+        rating:
+          type: integer
+          description: Calificación dada por el usuario
+        text:
+          type: string
+          description: Texto de la reseña
