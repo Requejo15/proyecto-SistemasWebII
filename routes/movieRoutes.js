@@ -106,7 +106,7 @@ router.post("/", async (req, res) => {
 // Actualizar una película
 router.put("/:show_id", async (req, res) => {
   try {
-    const updatedMovie = await Movie.findByIdAndUpdate(req.params.show_id, req.body, { new: true });
+    const updatedMovie = await Movie.findOneAndUpdate({ show_id: req.params.show_id }, req.body, { new: true });
     if (!updatedMovie) {
       return res.status(404).json({ message: "Movie not found" });
     }
@@ -119,7 +119,7 @@ router.put("/:show_id", async (req, res) => {
 // Eliminar una película
 router.delete("/:show_id", async (req, res) => {
   try {
-    const deletedMovie = await Movie.findByIdAndDelete(req.params.show_id);
+    const deletedMovie = await Movie.findOneAndDelete({ show_id: req.params.show_id });
     if (!deletedMovie) {
       return res.status(404).json({ message: "Movie not found" });
     }
