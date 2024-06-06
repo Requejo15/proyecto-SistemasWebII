@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Movie = require('../models/Movie'); // Asegúrate de que la ruta es correcta
+const Movie = require('../models/Movie'); 
+const { getMovieDetails } = require('../services/tmdbService');
+const { convertJsonToXml } = require('../utils/xmlConverter');
 
 // Obtener todas las películas
 router.get('/', async (req, res) => {
@@ -12,18 +14,16 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Obtener una película específica por show_id
-router.get('/:show_id', async (req, res) => {
-    try {
-        const movie = await Movie.findOne({ show_id: req.params.show_id });
-        if (!movie) {
-            return res.status(404).send({ message: 'Movie not found' });
-        }
-        res.json(movie);
-    } catch (err) {
-        res.status(500).send({ message: 'Error fetching movie', error: err });
+router.get('/movies/:id', async (req, res) => {
+    const movieDetails = await getMovieDetails(req.params.id);
+    if (req.query.format === 'xml') {
+        res.type('application/xml');
+        res.send(convertJsonToXml(movieDetails));
+    } else {
+        res.json(movieDetails);
     }
 });
+
 
 // Obtener películas por género
 router.get('/genres/:genre', async (req, res) => {
