@@ -46,13 +46,23 @@ router.get("/:show_id", async (req, res) => {
     res.status(500).send({ message: "Error fetching movie", error: err });
   }
 });
-router.get("/tmdb/:name", async (req, res) => {
-  const movieDetails = await getMovieDetails(req.params.name);
-  if (req.query.format === "xml") {
-    res.type("application/xml");
-    res.send(convertJsonToXml(movieDetails));
-  } else {
-    res.json(movieDetails);
+
+router.get("/tmdb/:title", async (req, res) => {
+  const movieName = req.params.title;
+  const format = req.query.format;
+  try {
+    const movieDetails = await getMovieDetails(movieName);
+
+    if (format && format.toLowerCase() === "xml") {
+      const xmlData = convertJsonToXml(movieDetails);
+      res.type("application/xml");
+      res.send(xmlData);
+    } else {
+      // Respuesta JSON por defecto
+      res.json(movieDetails);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
